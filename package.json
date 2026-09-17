@@ -1,0 +1,22 @@
+{
+  "name": "ai-access-equity",
+  "version": "1.0.0",
+  "description": "Prototype for the platform described in the PRD (see the linked Claude Doc). Working adults report being certified in AI tools but denied real access to use them at work — this site collects that data, shows it back as shareable statistics, and hosts an ideas board for solutions.",
+  "main": "script.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.126.0",
+    "@supabase/supabase-js": "^2.116.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "zod": "^4.6.5"
+  }
+}

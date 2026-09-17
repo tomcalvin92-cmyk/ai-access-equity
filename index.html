@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Access Equity — You're Not the Only One</title>
+<meta name="description" content="A place for working adults to report restricted AI access at work, see they're not alone, and find real ways to grow anyway." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">AI Access Equity</a>
+    <nav class="nav">
+      <a href="#problem">The Problem</a>
+      <a href="#survey">Share Your Story</a>
+      <a href="#ideas">Ideas</a>
+      <a href="#stats">Stats</a>
+    </nav>
+    <a class="btn btn-small btn-primary" href="#survey">Take the survey</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <p class="eyebrow">India-first &middot; anonymous &middot; free</p>
+      <h1>Certified in AI. <span class="accent">Still not allowed to use it.</span></h1>
+      <p class="hero-sub">If your company sent you for AI certification but never gave you a real login to practice with, you're not imagining it — and you're not alone. Tell your story, see the numbers, and find a way to grow anyway.</p>
+      <div class="hero-actions">
+        <a href="#survey" class="btn btn-primary">Share your experience — 8 min</a>
+        <a href="#problem" class="btn btn-ghost">See the research</a>
+      </div>
+      <div class="hero-stats" id="hero-stats" aria-live="polite">
+        <div class="hero-stat"><span class="hero-stat-num" data-target="0">0</span><span class="hero-stat-label">people have shared their story</span></div>
+        <div class="hero-stat"><span class="hero-stat-num-static">13%</span><span class="hero-stat-label">of employees get AI training <a href="https://www.computerweekly.com/news/366550874/Employees-missing-out-on-AI-training-and-development" target="_blank" rel="noopener">(Randstad)</a></span></div>
+        <div class="hero-stat"><span class="hero-stat-num-static">40&ndash;65%</span><span class="hero-stat-label">route around locked-down tools <a href="https://www.marktechpost.com/2026/05/13/enterprise-ai-governance-in-2026-why-the-tools-employees-use-are-ahead-of-the-policies-that-cover-them/" target="_blank" rel="noopener">(MarkTechPost)</a></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section id="problem" class="section">
+    <div class="wrap">
+      <h2>This is a documented, growing gap — not a one-off complaint</h2>
+      <p class="section-lead">Multiple independent 2025–2026 studies describe the same pattern across Indian workplaces: companies push certification, then withhold the access needed to actually use what was learned.</p>
+      <div class="card-grid">
+        <article class="card">
+          <p class="card-kicker">Certification vs. access</p>
+          <p class="card-stat">13%<span class="card-stat-of"> offered training</span></p>
+          <p class="card-body">vs. 33% already using AI daily at work — more than twice as many people using it as were ever trained on it.</p>
+        </article>
+        <article class="card">
+          <p class="card-kicker">Working around the block</p>
+          <p class="card-stat">40&ndash;65%<span class="card-stat-of"> use unapproved tools</span></p>
+          <p class="card-body">Only 37% of organizations have any formal AI governance policy; 56% of employees say they lack clear guidance.</p>
+        </article>
+        <article class="card">
+          <p class="card-kicker">The toll it takes</p>
+          <p class="card-stat">51%<span class="card-stat-of"> say training feels excessive</span></p>
+          <p class="card-body">33% feel embarrassed by their own AI gaps; 35% are nervous even discussing AI at work.</p>
+        </article>
+        <article class="card">
+          <p class="card-kicker">Preparedness gap</p>
+          <p class="card-stat">84%<span class="card-stat-of"> feel unprepared</span></p>
+          <p class="card-body">of Indian professionals feel unprepared for the 2026 job market, even though 87% use AI comfortably day to day.</p>
+        </article>
+      </div>
+      <p class="sources-note">Sources: Randstad Workmonitor Pulse via Computer Weekly, MarkTechPost, LinkedIn workforce surveys via Yahoo Finance and Careers360. Full citations in the project PRD.</p>
+    </div>
+  </section>
+
+  <!-- SURVEY -->
+  <section id="survey" class="section section-alt">
+    <div class="wrap">
+      <h2>Tell us what's actually happening</h2>
+      <p class="section-lead">Anonymous. Takes about 8 minutes. Your individual answers are never shown — only combined, anonymous statistics.</p>
+
+      <form id="survey-form" class="survey-card" novalidate>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p class="step-indicator"><span id="step-current">1</span> of <span id="step-total">5</span></p>
+
+        <!-- Step 1 -->
+        <fieldset class="step" data-step="1">
+          <legend>About you</legend>
+          <label>Age group
+            <select name="age" required>
+              <option value="">Select…</option>
+              <option>20-29</option><option>30-39</option><option>40-50</option>
+            </select>
+          </label>
+          <label>Current employment status
+            <select name="employment" required>
+              <option value="">Select…</option>
+              <option>Employed full-time</option>
+              <option>Employed part-time</option>
+              <option>On a career break</option>
+              <option>Recently lost a job (including AI-related restructuring)</option>
+            </select>
+          </label>
+          <label>Sector
+            <select name="sector" required>
+              <option value="">Select…</option>
+              <option>IT / Tech</option><option>BFSI</option><option>Manufacturing</option>
+              <option>Retail</option><option>Healthcare</option><option>Education</option>
+              <option>Government / PSU</option><option>Consulting</option><option>Other</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <!-- Step 2 -->
+        <fieldset class="step" data-step="2" hidden>
+          <legend>AI access &amp; training</legend>
+          <label>Has your employer required or encouraged AI certification in the past 12 months?
+            <select name="training_required" required>
+              <option value="">Select…</option>
+              <option>Yes, required</option><option>Yes, encouraged but optional</option><option>No</option>
+            </select>
+          </label>
+          <label>Were you given real hands-on access to practice, beyond the training itself?
+            <select name="hands_on_access" required>
+              <option value="">Select…</option>
+              <option>Full access</option><option>Limited access, specific tasks only</option><option>No practical access at all</option>
+            </select>
+          </label>
+          <label>Have you used a personal AI account for work because company access wasn't enough?
+            <select name="shadow_ai" required>
+              <option value="">Select…</option>
+              <option>Yes, regularly</option><option>Yes, occasionally</option><option>No</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <!-- Step 3 -->
+        <fieldset class="step" data-step="3" hidden>
+          <legend>How it affects you</legend>
+          <label>How much does this gap affect your confidence at work?
+            <input type="range" name="confidence_impact" min="1" max="5" value="3" />
+          </label>
+          <label>In a sentence or two — describe a moment this became frustrating for you
+            <textarea name="story" rows="4" placeholder="Optional, but real stories are what make the statistics land."></textarea>
+          </label>
+        </fieldset>
+
+        <!-- Step 4 -->
+        <fieldset class="step" data-step="4" hidden>
+          <legend>What would help</legend>
+          <label>What would help you most right now?
+            <select name="help_needed" required>
+              <option value="">Select…</option>
+              <option>More hands-on access at my current job</option>
+              <option>External practice resources</option>
+              <option>A community of peers in the same situation</option>
+              <option>Clearer guidance from HR</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <!-- Step 5 -->
+        <fieldset class="step" data-step="5" hidden>
+          <legend>Consent</legend>
+          <label class="checkbox-row">
+            <input type="checkbox" name="consent" required />
+            Include my anonymized response in aggregate public statistics (no names, no identifying details)
+          </label>
+        </fieldset>
+
+        <div class="form-nav">
+          <button type="button" id="btn-back" class="btn btn-ghost" hidden>Back</button>
+          <button type="button" id="btn-next" class="btn btn-primary">Continue</button>
+          <button type="submit" id="btn-submit" class="btn btn-primary" hidden>Submit anonymously</button>
+        </div>
+        <p id="survey-thanks" class="survey-thanks" hidden>Thank you — your story is now part of the count. <a href="#stats">See the stats update below.</a></p>
+        <div id="survey-guidance" class="survey-guidance" hidden>
+          <p class="survey-guidance-label">A few thoughts for your specific situation</p>
+          <p id="survey-guidance-text">Thinking this through…</p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- IDEAS BOARD -->
+  <section id="ideas" class="section">
+    <div class="wrap">
+      <h2>Got an idea for how to fix this?</h2>
+      <p class="section-lead">This isn't just a complaint board — add your own idea for closing the access gap. The most-supported ideas get built into the product roadmap; the wildest ones get flagged as "out of the box" for later.</p>
+
+      <form id="idea-form" class="idea-form">
+        <input type="text" name="idea" placeholder="e.g. A shared 'AI lab hour' every Friday, open laptop, no approval needed" required maxlength="240" />
+        <button type="submit" class="btn btn-primary">Add idea</button>
+      </form>
+
+      <ul id="idea-list" class="idea-list"></ul>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="stats" class="section section-alt">
+    <div class="wrap">
+      <h2>You're not the only one</h2>
+      <p class="section-lead">Live, anonymous, aggregated from everyone who has shared so far on this device. <span class="stats-note">(Demo data only — connects to the real shared count once the backend is wired up.)</span></p>
+      <div class="card-grid stats-grid" id="stats-grid">
+        <article class="card"><p class="card-kicker">Responses so far</p><p class="card-stat" id="stat-total">0</p></article>
+        <article class="card"><p class="card-kicker">No hands-on access despite training</p><p class="card-stat" id="stat-no-access">—</p></article>
+        <article class="card"><p class="card-kicker">Used a personal AI account for work</p><p class="card-stat" id="stat-shadow">—</p></article>
+        <article class="card"><p class="card-kicker">Ideas submitted</p><p class="card-stat" id="stat-ideas">0</p></article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>AI Access Equity — built in public, India-first.</p>
+    <p class="footer-fine">This is an early prototype. Survey and idea data currently save to your own browser only (localStorage) as a placeholder — see README for the plan to wire up shared, real storage.</p>
+  </div>
+</footer>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

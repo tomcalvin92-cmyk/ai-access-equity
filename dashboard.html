@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — AI Access Equity</title>
+<meta name="description" content="Company/HR view: response trends and LLM-synthesized solution candidates from the Ideas board." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .dash-wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
+  .dash-header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 8px; flex-wrap: wrap; }
+  .dash-note { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-size: 0.85rem; color: var(--text-muted); margin: 20px 0 36px; }
+  .synth-form { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+  .synth-form input { flex: 1; min-width: 220px; padding: 11px 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; }
+  .synth-status { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 24px; }
+  .cluster-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .cluster-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .cluster-tag { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
+  .cluster-tag.strong-support { background: var(--accent-soft); color: var(--accent-strong); }
+  .cluster-tag.out-of-the-box { background: var(--bg-alt); color: var(--text-muted); border: 1px solid var(--border); }
+  .cluster-item p { margin: 0; color: var(--text); font-size: 0.92rem; }
+  .cluster-count { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">AI Access Equity</a>
+    <nav class="nav">
+      <a href="index.html">Public site</a>
+    </nav>
+  </div>
+</header>
+
+<main class="dash-wrap">
+  <div class="dash-header">
+    <h1>Dashboard</h1>
+  </div>
+  <p class="section-lead">Response trends and the strongest solution candidates surfaced from the Ideas board, synthesized by Claude.</p>
+
+  <div class="dash-note">
+    <strong>Prototype note:</strong> this page has no authentication yet — anyone with the URL can view it, and anyone with the admin secret can trigger synthesis. Add real access control before sharing this link beyond your own testing. See README.
+  </div>
+
+  <div class="card-grid stats-grid" id="dash-stats">
+    <article class="card"><p class="card-kicker">Responses so far</p><p class="card-stat" id="dash-total">—</p></article>
+    <article class="card"><p class="card-kicker">No hands-on access despite training</p><p class="card-stat" id="dash-no-access">—</p></article>
+    <article class="card"><p class="card-kicker">Used a personal AI account for work</p><p class="card-stat" id="dash-shadow">—</p></article>
+    <article class="card"><p class="card-kicker">Ideas submitted</p><p class="card-stat" id="dash-ideas">—</p></article>
+  </div>
+
+  <h2 style="margin-top:48px;">Solution candidates</h2>
+  <form id="synth-form" class="synth-form">
+    <input type="password" id="admin-secret" placeholder="Admin secret (ADMIN_SECRET from .env)" autocomplete="off" />
+    <button type="submit" class="btn btn-primary">Run synthesis</button>
+  </form>
+  <p class="synth-status" id="synth-status"></p>
+
+  <ul class="cluster-list" id="cluster-list"></ul>
+</main>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>
