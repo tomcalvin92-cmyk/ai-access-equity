@@ -148,6 +148,12 @@
           <label>In a sentence or two — describe a moment this became frustrating for you
             <textarea name="story" rows="4" placeholder="Optional, but real stories are what make the statistics land."></textarea>
           </label>
+          <div id="clarify-block" class="clarify-block" hidden>
+            <input type="hidden" name="clarify_question" />
+            <label id="clarify-question-label">Claude has a quick follow-up
+              <textarea name="clarify_answer" rows="2" placeholder="Optional — answer if you want sharper guidance, or just click Continue again to skip."></textarea>
+            </label>
+          </div>
         </fieldset>
 
         <!-- Step 4 -->
@@ -178,10 +184,14 @@
           <button type="button" id="btn-next" class="btn btn-primary">Continue</button>
           <button type="submit" id="btn-submit" class="btn btn-primary" hidden>Submit anonymously</button>
         </div>
-        <p id="survey-thanks" class="survey-thanks" hidden>Thank you — your story is now part of the count. <a href="#stats">See the stats update below.</a></p>
-        <div id="survey-guidance" class="survey-guidance" hidden>
-          <p class="survey-guidance-label">A few thoughts for your specific situation</p>
-          <p id="survey-guidance-text">Thinking this through…</p>
+        <div id="result-card" class="result-card" hidden>
+          <p class="result-card-brand">AI Access Equity</p>
+          <p id="survey-thanks" class="survey-thanks">Thank you — your story is now part of the count.</p>
+          <div class="result-card-guidance">
+            <p class="survey-guidance-label">Your path forward</p>
+            <p id="survey-guidance-text">Thinking this through…</p>
+          </div>
+          <p class="result-card-hint">📸 Screenshot this and share it — so someone else sees they're not the only one. <a href="#stats">See the live stats ↓</a></p>
         </div>
       </form>
     </div>

@@ -9,6 +9,7 @@ const path = require("path");
 
 const guidanceHandler = require("./api/guidance");
 const synthesizeIdeasHandler = require("./api/synthesize-ideas");
+const clarifyHandler = require("./api/clarify");
 
 const app = express();
 const PORT = process.env.PORT || 5173;
@@ -18,6 +19,7 @@ app.use(express.static(__dirname));
 
 app.post("/api/guidance", guidanceHandler);
 app.post("/api/synthesize-ideas", synthesizeIdeasHandler);
+app.post("/api/clarify", clarifyHandler);
 
 app.listen(PORT, () => {
   console.log(`AI Access Equity running at http://localhost:${PORT}`);

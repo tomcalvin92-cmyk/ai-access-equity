@@ -17,10 +17,15 @@ create table if not exists responses (
   shadow_ai text,
   confidence_impact int,
   story text,
+  clarify_question text,
+  clarify_answer text,
   help_needed text,
   consent boolean not null default false,
   guidance text
 );
+
+alter table responses add column if not exists clarify_question text;
+alter table responses add column if not exists clarify_answer text;
 
 alter table responses enable row level security;
 

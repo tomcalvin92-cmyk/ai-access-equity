@@ -49,9 +49,57 @@ if (!supabaseClient) {
     return true;
   }
 
-  btnNext.addEventListener("click", () => {
+  const clarifyState = { asked: false };
+
+  async function maybeAskClarify() {
+    const storyField = form.querySelector('textarea[name="story"]');
+    const story = storyField.value.trim();
+    const block = document.getElementById("clarify-block");
+
+    if (!story || clarifyState.asked) return; // nothing to ask about, or already asked
+
+    clarifyState.asked = true;
+    btnNext.disabled = true;
+    const originalLabel = btnNext.textContent;
+    btnNext.textContent = "Thinking…";
+
+    try {
+      const res = await fetch("/api/clarify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          story,
+          sector: form.sector.value,
+          training_required: form.training_required.value,
+          hands_on_access: form.hands_on_access.value,
+        }),
+      });
+      const body = await res.json();
+      if (body.question) {
+        document.getElementById("clarify-question-label").firstChild.textContent = body.question + " ";
+        form.querySelector('input[name="clarify_question"]').value = body.question;
+        block.hidden = false;
+      }
+    } catch (err) {
+      console.error("clarify request failed:", err); // fail silent — never block the survey on this
+    } finally {
+      btnNext.disabled = false;
+      btnNext.textContent = originalLabel;
+    }
+  }
+
+  btnNext.addEventListener("click", async () => {
     const currentEl = steps[current - 1];
     if (!stepValid(currentEl)) return;
+
+    if (current === 3 && !clarifyState.asked) {
+      await maybeAskClarify();
+      if (document.getElementById("clarify-block").hidden === false && !clarifyState.shown) {
+        clarifyState.shown = true;
+        return; // question is now visible — let them answer (or click Continue again to skip)
+      }
+    }
+
     current = Math.min(total, current + 1);
     render();
   });
@@ -88,6 +136,8 @@ if (!supabaseClient) {
       shadow_ai: raw.shadow_ai,
       confidence_impact: raw.confidence_impact ? parseInt(raw.confidence_impact, 10) : null,
       story: raw.story || null,
+      clarify_question: raw.clarify_question || null,
+      clarify_answer: raw.clarify_answer || null,
       help_needed: raw.help_needed,
       consent: raw.consent === "on",
     };
@@ -104,7 +154,7 @@ if (!supabaseClient) {
 
     form.querySelectorAll("fieldset.step").forEach(s => s.hidden = true);
     document.querySelector(".form-nav").hidden = true;
-    document.getElementById("survey-thanks").hidden = false;
+    document.getElementById("result-card").hidden = false;
     document.getElementById("progress-fill").style.width = "100%";
 
     updateStats();
@@ -115,9 +165,7 @@ if (!supabaseClient) {
 })();
 
 async function fetchGuidance(id, record) {
-  const guidanceBox = document.getElementById("survey-guidance");
   const guidanceText = document.getElementById("survey-guidance-text");
-  guidanceBox.hidden = false;
 
   try {
     const res = await fetch("/api/guidance", {
