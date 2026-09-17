@@ -26,6 +26,7 @@ alter table responses enable row level security;
 
 -- Anonymous visitors can submit a response, but cannot read other people's
 -- raw responses back — only the aggregate view below is public.
+drop policy if exists "anyone can insert a response" on responses;
 create policy "anyone can insert a response"
   on responses for insert
   to anon
@@ -46,11 +47,13 @@ create table if not exists ideas (
 
 alter table ideas enable row level security;
 
+drop policy if exists "anyone can read ideas" on ideas;
 create policy "anyone can read ideas"
   on ideas for select
   to anon
   using (true);
 
+drop policy if exists "anyone can submit an idea" on ideas;
 create policy "anyone can submit an idea"
   on ideas for insert
   to anon
@@ -84,6 +87,7 @@ create table if not exists synthesized_ideas (
 
 alter table synthesized_ideas enable row level security;
 
+drop policy if exists "anyone can read synthesized ideas" on synthesized_ideas;
 create policy "anyone can read synthesized ideas"
   on synthesized_ideas for select
   to anon

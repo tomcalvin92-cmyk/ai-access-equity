@@ -71,7 +71,15 @@ if (!supabaseClient) {
     }
 
     const raw = Object.fromEntries(new FormData(form).entries());
+    // Generated client-side and inserted explicitly (rather than relying on
+    // the column default + .select() to read it back) because there is no
+    // anon SELECT policy on `responses` by design — nobody but the row's
+    // own author should be able to read individual responses back, and
+    // Postgres RLS runs an implicit SELECT-policy check on any RETURNING
+    // clause, which `.select()` after insert would trigger.
+    const id = crypto.randomUUID();
     const record = {
+      id,
       age: raw.age,
       employment: raw.employment,
       sector: raw.sector,
@@ -85,11 +93,7 @@ if (!supabaseClient) {
     };
 
     btnSubmit.disabled = true;
-    const { data, error } = await supabaseClient
-      .from("responses")
-      .insert(record)
-      .select()
-      .single();
+    const { error } = await supabaseClient.from("responses").insert(record);
     btnSubmit.disabled = false;
 
     if (error) {
@@ -104,7 +108,7 @@ if (!supabaseClient) {
     document.getElementById("progress-fill").style.width = "100%";
 
     updateStats();
-    fetchGuidance(data.id, record);
+    fetchGuidance(id, record);
   });
 
   render();
