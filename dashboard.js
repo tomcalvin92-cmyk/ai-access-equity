@@ -3,6 +3,33 @@ const supabaseClient =
     ? window.supabase.createClient(window.APP_CONFIG.SUPABASE_URL, window.APP_CONFIG.SUPABASE_ANON_KEY)
     : null;
 
+function setRing(ringId, valueId, pct) {
+  const ring = document.getElementById(ringId);
+  const value = document.getElementById(valueId);
+  ring.style.setProperty("--pct", pct);
+  value.textContent = `${pct}%`;
+}
+
+function renderBreakdown(containerId, rows, labelKey) {
+  const container = document.getElementById(containerId);
+  if (!rows || rows.length === 0) {
+    container.innerHTML = '<p class="breakdown-empty">No data yet.</p>';
+    return;
+  }
+  const max = Math.max(...rows.map((r) => r.n));
+  container.innerHTML = rows
+    .slice(0, 6)
+    .map(
+      (r) => `
+      <div class="bar-row">
+        <span class="bar-label">${r[labelKey]}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${(r.n / max) * 100}%"></div></div>
+        <span class="bar-value">${r.n}</span>
+      </div>`
+    )
+    .join("");
+}
+
 async function loadStats() {
   if (!supabaseClient) return;
   const { data: stats, error } = await supabaseClient.from("response_stats").select("*").single();
@@ -12,13 +39,19 @@ async function loadStats() {
   }
   const total = stats.total_responses || 0;
   document.getElementById("dash-total").textContent = total;
-  document.getElementById("dash-no-access").textContent = total ? `${stats.pct_no_access ?? 0}%` : "—";
-  document.getElementById("dash-shadow").textContent = total ? `${stats.pct_shadow_ai ?? 0}%` : "—";
+  setRing("ring-no-access", "ring-no-access-value", total ? stats.pct_no_access ?? 0 : 0);
+  setRing("ring-shadow", "ring-shadow-value", total ? stats.pct_shadow_ai ?? 0 : 0);
 
   const { count: ideaCount, error: ideaErr } = await supabaseClient
     .from("ideas")
     .select("id", { count: "exact", head: true });
   document.getElementById("dash-ideas").textContent = ideaErr ? "—" : (ideaCount ?? 0);
+
+  const { data: sectors } = await supabaseClient.from("sector_breakdown").select("*");
+  renderBreakdown("sector-breakdown", sectors, "sector");
+
+  const { data: companySizes } = await supabaseClient.from("company_size_breakdown").select("*");
+  renderBreakdown("company-breakdown", companySizes, "company_size");
 }
 
 async function loadClusters() {

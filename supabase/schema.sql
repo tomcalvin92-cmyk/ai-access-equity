@@ -12,6 +12,8 @@ create table if not exists responses (
   age text,
   employment text,
   sector text,
+  company_size text,
+  role_level text,
   training_required text,
   hands_on_access text,
   shadow_ai text,
@@ -20,12 +22,18 @@ create table if not exists responses (
   clarify_question text,
   clarify_answer text,
   help_needed text,
+  would_use_lab_space text,
+  likely_to_share int,
   consent boolean not null default false,
   guidance text
 );
 
 alter table responses add column if not exists clarify_question text;
 alter table responses add column if not exists clarify_answer text;
+alter table responses add column if not exists company_size text;
+alter table responses add column if not exists role_level text;
+alter table responses add column if not exists would_use_lab_space text;
+alter table responses add column if not exists likely_to_share int;
 
 alter table responses enable row level security;
 
@@ -119,3 +127,25 @@ select
 from responses;
 
 grant select on response_stats to anon;
+
+-- ---------------------------------------------------------------------------
+-- sector_breakdown / company_size_breakdown: aggregate counts for the
+-- Dashboard's trend view. Anonymous counts only, same ownership trick as
+-- response_stats above.
+-- ---------------------------------------------------------------------------
+create or replace view sector_breakdown as
+select sector, count(*) as n
+from responses
+where sector is not null
+group by sector
+order by n desc;
+
+create or replace view company_size_breakdown as
+select company_size, count(*) as n
+from responses
+where company_size is not null
+group by company_size
+order by n desc;
+
+grant select on sector_breakdown to anon;
+grant select on company_size_breakdown to anon;

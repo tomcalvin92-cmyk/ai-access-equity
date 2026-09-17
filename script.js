@@ -92,7 +92,7 @@ if (!supabaseClient) {
     const currentEl = steps[current - 1];
     if (!stepValid(currentEl)) return;
 
-    if (current === 3 && !clarifyState.asked) {
+    if (current === 4 && !clarifyState.asked) {
       await maybeAskClarify();
       if (document.getElementById("clarify-block").hidden === false && !clarifyState.shown) {
         clarifyState.shown = true;
@@ -131,6 +131,8 @@ if (!supabaseClient) {
       age: raw.age,
       employment: raw.employment,
       sector: raw.sector,
+      company_size: raw.company_size,
+      role_level: raw.role_level,
       training_required: raw.training_required,
       hands_on_access: raw.hands_on_access,
       shadow_ai: raw.shadow_ai,
@@ -139,6 +141,8 @@ if (!supabaseClient) {
       clarify_question: raw.clarify_question || null,
       clarify_answer: raw.clarify_answer || null,
       help_needed: raw.help_needed,
+      would_use_lab_space: raw.would_use_lab_space,
+      likely_to_share: raw.likely_to_share ? parseInt(raw.likely_to_share, 10) : null,
       consent: raw.consent === "on",
     };
 
@@ -165,7 +169,16 @@ if (!supabaseClient) {
 })();
 
 async function fetchGuidance(id, record) {
-  const guidanceText = document.getElementById("survey-guidance-text");
+  const guidanceList = document.getElementById("survey-guidance-list");
+
+  function renderBullets(items) {
+    guidanceList.innerHTML = "";
+    items.forEach((text) => {
+      const li = document.createElement("li");
+      li.textContent = text;
+      guidanceList.appendChild(li);
+    });
+  }
 
   try {
     const res = await fetch("/api/guidance", {
@@ -174,12 +187,14 @@ async function fetchGuidance(id, record) {
       body: JSON.stringify({ id, ...record }),
     });
     const body = await res.json();
-    guidanceText.textContent = res.ok
-      ? body.guidance
-      : "Couldn't generate personalized guidance right now — your response was still saved.";
+    renderBullets(
+      res.ok && body.bullets && body.bullets.length
+        ? body.bullets
+        : ["Couldn't generate personalized guidance right now — your response was still saved."]
+    );
   } catch (err) {
     console.error("guidance request failed:", err);
-    guidanceText.textContent = "Couldn't reach the guidance service — your response was still saved.";
+    renderBullets(["Couldn't reach the guidance service — your response was still saved."]);
   }
 }
 
@@ -210,12 +225,13 @@ async function fetchGuidance(id, record) {
     if (!ideas || ideas.length === 0) {
       list.innerHTML = '<li class="idea-empty">No ideas yet — be the first.</li>';
     } else {
-      ideas.forEach((idea) => {
+      ideas.forEach((idea, index) => {
         const li = document.createElement("li");
-        li.className = "idea-item";
+        li.className = "idea-item" + (index === 0 && idea.votes > 0 ? " idea-item-top" : "");
         const upvote = document.createElement("div");
         upvote.className = "idea-upvote";
-        upvote.innerHTML = `<strong>${idea.votes}</strong>votes`;
+        upvote.innerHTML = (index === 0 && idea.votes > 0 ? '<span class="idea-crown">👑</span>' : "") +
+          `<strong>${idea.votes}</strong>votes`;
         upvote.addEventListener("click", async () => {
           const { error: voteError } = await supabaseClient.rpc("increment_idea_vote", { idea_id: idea.id });
           if (voteError) {
@@ -296,3 +312,25 @@ async function updateStats() {
 }
 
 updateStats();
+
+// --- Scroll-reveal animation -------------------------------------------
+
+(function initReveal() {
+  const targets = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window) || targets.length === 0) {
+    targets.forEach((el) => el.classList.add("reveal-visible"));
+    return;
+  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("reveal-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+  targets.forEach((el) => observer.observe(el));
+})();

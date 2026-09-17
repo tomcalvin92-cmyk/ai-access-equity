@@ -10,9 +10,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
 <style>
-  .dash-wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
-  .dash-header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 8px; flex-wrap: wrap; }
+  .dash-wrap { max-width: 920px; margin: 0 auto; padding: 48px 20px 80px; }
+  .dash-header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
   .dash-note { background: var(--bg-alt); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; font-size: 0.85rem; color: var(--text-muted); margin: 20px 0 36px; }
+
+  .dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 20px; }
+  @media (max-width: 900px) { .dash-grid { grid-template-columns: repeat(2, 1fr); } }
+  .dash-tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; text-align: center; }
+  .dash-tile-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-strong); margin-bottom: 10px; }
+  .dash-tile-icon svg { width: 20px; height: 20px; }
+  .dash-tile-num { font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--text); margin: 0; }
+  .dash-tile-label { font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 0; }
+
+  .ring-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 36px; }
+  @media (max-width: 640px) { .ring-row { grid-template-columns: 1fr; } }
+  .ring-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; display: flex; align-items: center; gap: 20px; }
+  .ring { --pct: 0; width: 96px; height: 96px; border-radius: 50%; flex-shrink: 0; position: relative;
+    background: conic-gradient(var(--accent) calc(var(--pct) * 1%), var(--border) 0); }
+  .ring::before { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: var(--surface); }
+  .ring-value { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; color: var(--text); }
+  .ring-label { margin: 0; font-size: 0.88rem; color: var(--text); font-weight: 500; }
+
+  .breakdown-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+  @media (max-width: 720px) { .breakdown-grid { grid-template-columns: 1fr; } }
+  .breakdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+  .breakdown-title { font-weight: 600; color: var(--text); margin: 0 0 14px; font-size: 0.92rem; }
+  .bar-list { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { width: 128px; flex-shrink: 0; font-size: 0.82rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { flex: 1; height: 10px; background: var(--bg-alt); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%); border-radius: 999px; }
+  .bar-value { width: 24px; text-align: right; font-size: 0.8rem; color: var(--text-muted); }
+  .breakdown-empty { color: var(--text-muted); font-size: 0.85rem; margin: 0; }
+
   .synth-form { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
   .synth-form input { flex: 1; min-width: 220px; padding: 11px 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; }
   .synth-status { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 24px; }
@@ -38,7 +68,10 @@
 
 <main class="dash-wrap">
   <div class="dash-header">
-    <h1>Dashboard</h1>
+    <span class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </span>
+    <h1 style="margin:0;">Dashboard</h1>
   </div>
   <p class="section-lead">Response trends and the strongest solution candidates surfaced from the Ideas board, synthesized by Claude.</p>
 
@@ -46,14 +79,42 @@
     <strong>Prototype note:</strong> this page has no authentication yet — anyone with the URL can view it, and anyone with the admin secret can trigger synthesis. Add real access control before sharing this link beyond your own testing. See README.
   </div>
 
-  <div class="card-grid stats-grid" id="dash-stats">
-    <article class="card"><p class="card-kicker">Responses so far</p><p class="card-stat" id="dash-total">—</p></article>
-    <article class="card"><p class="card-kicker">No hands-on access despite training</p><p class="card-stat" id="dash-no-access">—</p></article>
-    <article class="card"><p class="card-kicker">Used a personal AI account for work</p><p class="card-stat" id="dash-shadow">—</p></article>
-    <article class="card"><p class="card-kicker">Ideas submitted</p><p class="card-stat" id="dash-ideas">—</p></article>
+  <div class="dash-grid">
+    <div class="dash-tile">
+      <div class="dash-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <p class="dash-tile-num" id="dash-total">—</p>
+      <p class="dash-tile-label">Responses so far</p>
+    </div>
+    <div class="dash-tile">
+      <div class="dash-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0 0 12 2z"/></svg></div>
+      <p class="dash-tile-num" id="dash-ideas">—</p>
+      <p class="dash-tile-label">Ideas submitted</p>
+    </div>
   </div>
 
-  <h2 style="margin-top:48px;">Solution candidates</h2>
+  <div class="ring-row">
+    <div class="ring-card">
+      <div class="ring" id="ring-no-access"><span class="ring-value" id="ring-no-access-value">—</span></div>
+      <p class="ring-label">No hands-on access despite training</p>
+    </div>
+    <div class="ring-card">
+      <div class="ring" id="ring-shadow"><span class="ring-value" id="ring-shadow-value">—</span></div>
+      <p class="ring-label">Used a personal AI account for work</p>
+    </div>
+  </div>
+
+  <div class="breakdown-grid">
+    <div class="breakdown-card">
+      <p class="breakdown-title">Responses by sector</p>
+      <div class="bar-list" id="sector-breakdown"><p class="breakdown-empty">No data yet.</p></div>
+    </div>
+    <div class="breakdown-card">
+      <p class="breakdown-title">Responses by company size</p>
+      <div class="bar-list" id="company-breakdown"><p class="breakdown-empty">No data yet.</p></div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:12px;">Solution candidates</h2>
   <form id="synth-form" class="synth-form">
     <input type="password" id="admin-secret" placeholder="Admin secret (ADMIN_SECRET from .env)" autocomplete="off" />
     <button type="submit" class="btn btn-primary">Run synthesis</button>
